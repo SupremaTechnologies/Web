@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Company - 創新未來科技</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        /* 導航欄 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 15px 50px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e3a8a;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        .nav-links li {
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links li:hover {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-links li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-links li:hover::before {
+            left: 100%;
+        }
+
+        /* 主要內容區域 */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: center;
+            gap: 100px;
+        }
+
+        .text-content {
+            flex: 1;
+            z-index: 2;
+        }
+
+        .main-title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #1e293b;
+            line-height: 1.2;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: slideInLeft 1s ease forwards;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: slideInLeft 1s ease 0.3s forwards;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            opacity: 0;
+            animation: slideInLeft 1s ease 0.6s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* 使用背景圖片 */
+        .background-visual {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('background.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        /* 浮動粒子效果 */
+        .particle {
+            position: absolute;
+            background: rgba(59, 130, 246, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) {
+            width: 4px;
+            height: 4px;
+            top: 20%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            width: 6px;
+            height: 6px;
+            top: 40%;
+            left: 25%;
+            animation-delay: 1s;
+        }
+
+        .particle:nth-child(3) {
+            width: 3px;
+            height: 3px;
+            top: 60%;
+            left: 35%;
+            animation-delay: 2s;
+        }
+
+        .particle:nth-child(4) {
+            width: 5px;
+            height: 5px;
+            top: 80%;
+            left: 20%;
+            animation-delay: 3s;
+        }
+
+        .particle:nth-child(5) {
+            width: 4px;
+            height: 4px;
+            top: 30%;
+            left: 70%;
+            animation-delay: 1.5s;
+        }
+
+        .particle:nth-child(6) {
+            width: 7px;
+            height: 7px;
+            top: 70%;
+            left: 80%;
+            animation-delay: 2.5s;
+        }
+
+        /* 內容區塊 */
+        .content-section {
+            padding: 100px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .section-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        /* 動畫定義 */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes circuitFlow {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+        }
+
+        @keyframes nodePulse {
+            0%, 100% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes fadeInRotate {
+            from {
+                opacity: 0;
+                transform: translateY(-50%) rotate(-180deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(-50%) rotate(0deg);
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+                opacity: 0.4;
+            }
+            50% {
+                transform: translateY(-20px);
+                opacity: 1;
+            }
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .hero-section {
+                padding: 0 20px;
+            }
+
+            .content-wrapper {
+                flex-direction: column;
+                gap: 50px;
+                text-align: center;
+            }
+
+            .main-title {
+                font-size: 2.5rem;
+            }
+
+            .background-visual {
+                position: relative;
+                right: 0;
+                width: 300px;
+                height: 300px;
+                margin: 0 auto;
+            }
+
+            .content-section {
+                padding: 50px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">Suprema Technologies</div>
+        <ul class="nav-links">
+            <li onclick="scrollToSection('home')">Home</li>
+            <li onclick="scrollToSection('about')">About</li>
+            <li onclick="scrollToSection('services')">Services</li>
+        </ul>
+    </nav>
+
+    <!-- 主要區塊 -->
+    <section class="hero-section" id="home">
+        <div class="content-wrapper">
+            <div class="text-content">
+                <h1 class="main-title">捷科資訊<br>引領未來</h1>
+                <p class="subtitle">捷科資訊結合雲端資安檢測與 AI 應用線上服務，透過自主研發的動態／靜態分析引擎，讓企業快速偵測漏洞、同時可在平台上使用智能化工具，全面提升系統安全與運營效率。</p>
+                <button class="cta-button" onclick="scrollToSection('about')">開始探索</button>
+            </div>
+        </div>
+
+        <!-- 背景圖片 -->
+        <div class="background-visual"></div>
+
+        <!-- 浮動粒子 -->
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </section>
+
+    <!-- 關於我們區塊 -->
+    <section class="content-section" id="about">
+        <h2 class="section-title">關於我們</h2>
+        <p class="section-content">
+            捷科資訊專注於行動應用程式安全檢測與資安防護，致力於將資訊安全融入軟體開發生命週期（SSDLC），以降低上線後發生漏洞的風險。核心團隊由資深資安專家、軟體工程師與產品經理組成，已研發出雲端自動化 App 安全檢測平台，整合 Android／iOS 靜態與動態分析引擎，提供即時漏洞偵測與報告，並成功協助玉山銀行、元大銀行等金融機構建立內部網路安全檢測環境，為客戶交付高品質、自動化的資安服務。此外，我們亦推出行動端防勒索 (Ransomware) 解決方案，採用行為式分析與聯防機制，有效阻擋惡意程式執行，提升企業整體防禦能力。
+        </p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>創新驅動</h3>
+                <p> 研發雲端自動化安全檢測平台，結合靜態與動態分析技術，將資安檢測前置於開發全流程，有效縮短漏洞暴露時間。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>高效執行</h3>
+                <p>平台支援一鍵上傳、批次檢測及即時報告，平均單次檢測僅需數分鐘即可完成，並能同步回傳結果至企業內部系統，提升修復效率。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>精準服務</h3>
+                <p>深耕金融與中小開發者市場，提供量身客製化檢測方案，曾與玉山銀行、元大銀行等大型客戶合作，協助建立內部 SSDLC 檢測流程。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 服務區塊 -->
+    <section class="content-section" id="services">
+        <h2 class="section-title">我們的服務</h2>
+        <p class="section-content">
+            捷科資訊提供全方位資安與技術解決方案，從網站、行動 App 的安全檢測，到雲端架構建置與防勒索防護，並持續研發AI線上平台服務，為新創與企業客戶量身打造最適合的技術支援。
+        </p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">💻</div>
+                <h3>網站安全檢測</h3>
+                <p>整合動態與靜態分析，引入企業級漏洞掃描，確保網站架構無縫通過安全審查，並協助金融機構（如元大、玉山等）建立內部網路防護環境。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>應用程式安全</h3>
+                <p>針對 iOS、Android 原生 App 提供自動化安全掃描與優化建議，降低上線後風險並加速修復流程，讓行動應用從開發初期就能納入資安思維。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">☁️</div>
+                <h3>雲端架構與內網建置</h3>
+                <p>設計與部署安全穩定的雲端環境與企業內部網路（Intranet），過往已協助多家銀行完成內部網路安全建置，並提供持續維護與監控服務，確保系統穩定運行。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI線上平台服務（未來規劃）</h3>
+                <p>規劃推出 AI 智能應用平台，包含自動化漏洞偵測、智能風險評估與即時報告等線上服務，讓企業能隨時透過網頁操作，利用 AI 提升資安檢測效率與決策速度。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>資訊安全防護</h3>
+                <p>自主研發資安引擎及行動端防勒索（Ransomware）解決方案，結合聯防機制即時阻擋惡意程式，並將安全檢測流程前置至開發全流程（SSDLC），協助企業全面守護資料安全。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>資料分析與可視化</h3>
+                <p>運用大數據分析技術與可視化儀表板，深入洞察系統弱點與攻擊趨勢，透過可量化的安全報告協助客戶制定更精準的防禦策略。</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 導航欄滾動效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // 平滑滾動功能
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // 滾動動畫觸發
+<!--        function isElementInViewport(el) {-->
+<!--            const rect = el.getBoundingClientRect();-->
+<!--            return (-->
+<!--                rect.top >= 0 &&-->
+<!--                rect.left >= 0 &&-->
+<!--                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&-->
+<!--                rect.right <= (window.innerWidth || document.documentElement.clientWidth)-->
+<!--            );-->
+<!--        }-->
+                // 滾動動畫觸發
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+
+            // 當元素的頂部進入視窗下方80%時就觸發
+            return rect.top < windowHeight * 0.8 && rect.bottom > 0;
+        }
+
+        function handleScrollAnimation() {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                if (isElementInViewport(section)) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScrollAnimation);
+        window.addEventListener('load', handleScrollAnimation);
+
+        // 添加鼠標跟隨效果
+        document.addEventListener('mousemove', function(e) {
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach((particle, index) => {
+                const speed = (index + 1) * 0.01;
+                const x = e.clientX * speed;
+                const y = e.clientY * speed;
+
+                setTimeout(() => {
+                    particle.style.transform = `translate(${x}px, ${y}px)`;
+                }, index * 100);
+            });
+        });
+
+        // 按鈕點擊波紋效果
+        document.querySelector('.cta-button').addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.animation = 'ripple 0.6s ease-out';
+
+            this.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+
+        // 添加波紋動畫CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                0% {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
