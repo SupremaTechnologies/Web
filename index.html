@@ -1,623 +1,327 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Company - Innovating the Future</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Company - Innovating the Future</title>
+<style>
+/* === Base styles (from your current site) === */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Arial',sans-serif;overflow-x:hidden;background:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);}
 
-        body {
-            font-family: 'Arial', sans-serif;
-            overflow-x: hidden;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
+/* Navbar stays on top across all overlays */
+.navbar{
+  position:fixed;top:0;width:100%;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(10px);
+  padding:20px 50px;display:flex;justify-content:space-between;align-items:center;
+  z-index:2000;
+  transition:all 0.3s ease;
+}
+.navbar.scrolled{padding:15px 50px;box-shadow:0 2px 20px rgba(0,0,0,0.1);}
+.logo{font-size:24px;font-weight:bold;color:#1e3a8a;letter-spacing:2px;}
+.nav-links{display:flex;list-style:none;gap:40px;}
+.nav-links li{cursor:pointer;padding:10px 20px;border-radius:25px;transition:all 0.3s ease;position:relative;overflow:hidden;}
+.nav-links li:hover{background:linear-gradient(45deg,#3b82f6,#1d4ed8);color:#fff;transform:translateY(-2px);}
+.nav-links li::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);transition:left 0.5s ease;}
+.nav-links li:hover::before{left:100%;}
 
-        /* 導航欄 */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
+.hero-section{height:100vh;display:flex;align-items:center;padding:0 50px;position:relative;overflow:hidden;}
+.content-wrapper{display:flex;width:100%;max-width:1400px;margin:0 auto;align-items:center;gap:100px;}
+.text-content{flex:1;z-index:2;}
+.main-title{font-size:4rem;font-weight:bold;color:#1e293b;line-height:1.2;margin-bottom:30px;opacity:0;animation:slideInLeft 1s ease forwards;}
+.subtitle{font-size:1.2rem;color:#64748b;line-height:1.6;margin-bottom:40px;opacity:0;animation:slideInLeft 1s ease 0.3s forwards;}
+.cta-button{background:linear-gradient(45deg,#3b82f6,#1d4ed8);color:#fff;padding:18px 40px;border:none;border-radius:50px;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:all .3s ease;box-shadow:0 10px 30px rgba(59,130,246,.3);opacity:0;animation:slideInLeft 1s ease .6s forwards;position:relative;overflow:hidden;}
+.cta-button:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(59,130,246,.4);}
+.cta-button::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .5s ease;}
+.cta-button:hover::before{left:100%;}
+.background-visual{position:absolute;top:0;left:0;width:100%;height:100%;background-image:url("/static/background.png");background-size:cover;background-repeat:no-repeat;background-position:center;opacity:.3;z-index:1;}
+.particle{position:absolute;background:rgba(59,130,246,.6);border-radius:50%;pointer-events:none;animation:float 6s ease-in-out infinite;}
+.particle:nth-child(1){width:4px;height:4px;top:20%;left:15%;animation-delay:0s;}
+.particle:nth-child(2){width:6px;height:6px;top:40%;left:25%;animation-delay:1s;}
+.particle:nth-child(3){width:3px;height:3px;top:60%;left:35%;animation-delay:2s;}
+.particle:nth-child(4){width:5px;height:5px;top:80%;left:20%;animation-delay:3s;}
+.particle:nth-child(5){width:4px;height:4px;top:30%;left:70%;animation-delay:1.5s;}
+.particle:nth-child(6){width:7px;height:7px;top:70%;left:80%;animation-delay:2.5s;}
 
-        .navbar.scrolled {
-            padding: 15px 50px;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-        }
+.content-section{padding:100px 50px;max-width:1200px;margin:0 auto;opacity:0;transform:translateY(50px);transition:all .8s ease;}
+.content-section.visible{opacity:1;transform:translateY(0);}
+.section-title{font-size:2.5rem;color:#1e293b;margin-bottom:30px;text-align:center;}
+.section-content{font-size:1.1rem;line-height:1.8;color:#64748b;text-align:center;margin-bottom:50px;}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;margin-top:50px;}
+.feature-card{background:rgba(255,255,255,.8);padding:40px 30px;border-radius:20px;text-align:center;transition:all .3s ease;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);}
+.feature-card:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,.1);}
+.feature-icon{width:60px;height:60px;background:linear-gradient(45deg,#3b82f6,#1d4ed8);border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;}
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1e3a8a;
-            letter-spacing: 2px;
-        }
+/* === Overlays (Products & Contact) keep navbar clickable === */
+.overlay{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:linear-gradient(135deg,#f5f7fa,#c3cfe2);
+  display:none;justify-content:flex-start;align-items:flex-start;
+  z-index:900;                 /* below navbar */
+  padding-top:90px;            /* reserve space for navbar */
+  overflow:auto;
+}
+.overlay-inner{width:100%;display:flex;justify-content:center;align-items:flex-start;padding:40px 20px;}
+.panel{background:#fff;padding:40px 32px;border-radius:20px;max-width:980px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.1);}
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 40px;
-        }
+/* Products styles */
+.products-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px;}
+.products-title{font-size:2rem;color:#1e293b;}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px;margin-top:12px;}
+.card h3{margin-bottom:8px;color:#111827;}
+.card p{color:#4b5563;line-height:1.6;}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;}
+.tag{font-size:.8rem;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:6px 10px;}
+.actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}
+.btn{border:none;border-radius:999px;padding:12px 18px;cursor:pointer;font-weight:600;}
+.btn-primary{background:linear-gradient(45deg,#3b82f6,#1d4ed8);color:#fff;box-shadow:0 10px 30px rgba(59,130,246,.3);}
+.btn-ghost{background:#e5e7eb;color:#111827;}
+.section-subtitle{font-size:1rem;color:#6b7280;margin-bottom:8px}
 
-        .nav-links li {
-            cursor: pointer;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
+/* Details collapsible */
+.details{margin-top:16px;display:none;}
+.details.open{display:block;}
+.details h4{margin:16px 0 6px 0;color:#111827;}
+.details ul{padding-left:18px;color:#4b5563;line-height:1.7;}
+.details li{margin:4px 0;}
 
-        .nav-links li:hover {
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            color: white;
-            transform: translateY(-2px);
-        }
+/* Contact styles (kept) */
+.contact-container{text-align:center}
+.contact-info{font-size:1.2rem;color:#1e293b;line-height:2;}
+.contact-info a{color:#1d4ed8;text-decoration:none;}
+.back-button{background:#e5e7eb;color:#111827;border:none;padding:10px 18px;border-radius:999px;cursor:pointer;margin-top:16px;}
 
-        .nav-links li::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s ease;
-        }
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-50px);}to{opacity:1;transform:translateX(0);}}
+@keyframes float{0%,100%{transform:translateY(0);opacity:.4;}50%{transform:translateY(-20px);opacity:1;}}
 
-        .nav-links li:hover::before {
-            left: 100%;
-        }
-
-        /* 主要內容區域 */
-        .hero-section {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 0 50px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .content-wrapper {
-            display: flex;
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            align-items: center;
-            gap: 100px;
-        }
-
-        .text-content {
-            flex: 1;
-            z-index: 2;
-        }
-
-        .main-title {
-            font-size: 4rem;
-            font-weight: bold;
-            color: #1e293b;
-            line-height: 1.2;
-            margin-bottom: 30px;
-            opacity: 0;
-            animation: slideInLeft 1s ease forwards;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: #64748b;
-            line-height: 1.6;
-            margin-bottom: 40px;
-            opacity: 0;
-            animation: slideInLeft 1s ease 0.3s forwards;
-        }
-
-        .cta-button {
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            color: white;
-            padding: 18px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
-            opacity: 0;
-            animation: slideInLeft 1s ease 0.6s forwards;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
-        }
-
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .cta-button:hover::before {
-            left: 100%;
-        }
-
-        /* 使用背景圖片 */
-        .background-visual {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("/static/background.png");
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: 0.3;
-            z-index: 1;
-        }
-
-        /* 浮動粒子效果 */
-        .particle {
-            position: absolute;
-            background: rgba(59, 130, 246, 0.6);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .particle:nth-child(1) {
-            width: 4px;
-            height: 4px;
-            top: 20%;
-            left: 15%;
-            animation-delay: 0s;
-        }
-
-        .particle:nth-child(2) {
-            width: 6px;
-            height: 6px;
-            top: 40%;
-            left: 25%;
-            animation-delay: 1s;
-        }
-
-        .particle:nth-child(3) {
-            width: 3px;
-            height: 3px;
-            top: 60%;
-            left: 35%;
-            animation-delay: 2s;
-        }
-
-        .particle:nth-child(4) {
-            width: 5px;
-            height: 5px;
-            top: 80%;
-            left: 20%;
-            animation-delay: 3s;
-        }
-
-        .particle:nth-child(5) {
-            width: 4px;
-            height: 4px;
-            top: 30%;
-            left: 70%;
-            animation-delay: 1.5s;
-        }
-
-        .particle:nth-child(6) {
-            width: 7px;
-            height: 7px;
-            top: 70%;
-            left: 80%;
-            animation-delay: 2.5s;
-        }
-
-        /* 內容區塊 */
-        .content-section {
-            padding: 100px 50px;
-            max-width: 1200px;
-            margin: 0 auto;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s ease;
-        }
-
-        .content-section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            color: #1e293b;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .section-content {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #64748b;
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 40px 30px;
-            border-radius: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-        }
-
-        /* 動畫定義 */
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
-        }
-
-        @keyframes circuitFlow {
-            0% {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-        }
-
-        @keyframes nodePulse {
-            0%, 100% {
-                opacity: 0.6;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
-        }
-
-        @keyframes fadeInRotate {
-            from {
-                opacity: 0;
-                transform: translateY(-50%) rotate(-180deg);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(-50%) rotate(0deg);
-            }
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-                opacity: 0.4;
-            }
-            50% {
-                transform: translateY(-20px);
-                opacity: 1;
-            }
-        }
-
-        /* 響應式設計 */
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 15px 20px;
-            }
-
-            .nav-links {
-                gap: 20px;
-            }
-
-            .hero-section {
-                padding: 0 20px;
-            }
-
-            .content-wrapper {
-                flex-direction: column;
-                gap: 50px;
-                text-align: center;
-            }
-
-            .main-title {
-                font-size: 2.5rem;
-            }
-
-            .background-visual {
-                position: relative;
-                right: 0;
-                width: 300px;
-                height: 300px;
-                margin: 0 auto;
-            }
-
-            .content-section {
-                padding: 50px 20px;
-            }
-        }
-    </style>
+@media (max-width:768px){
+  .navbar{padding:15px 20px;}
+  .nav-links{gap:20px;}
+  .hero-section{padding:0 20px;}
+  .content-wrapper{flex-direction:column;gap:50px;text-align:center;}
+  .main-title{font-size:2.5rem;}
+  .content-section{padding:50px 20px;}
+}
+</style>
 </head>
 <body>
-    <!-- 導航欄 -->
-    <nav class="navbar" id="navbar">
-        <div class="logo">Suprema Technologies</div>
-        <ul class="nav-links">
-            <li onclick="scrollToSection('home')">Home</li>
-            <li onclick="scrollToSection('about')">About</li>
-            <li onclick="scrollToSection('services')">Services</li>
-        </ul>
-    </nav>
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="logo">Suprema Technologies</div>
+  <ul class="nav-links" id="navLinks">
+    <li onclick="gotoAndHide('home')">Home</li>
+    <li onclick="gotoAndHide('about')">About</li>
+    <li onclick="gotoAndHide('services')">Services</li>
+    <li onclick="showProducts()">Products</li>
+    <li onclick="showContact()">Contact</li>
+  </ul>
+</nav>
 
-    <!-- 主要區塊 -->
-    <section class="hero-section" id="home">
-        <div class="content-wrapper">
-            <div class="text-content">
-                <h1 class="main-title">Suprema Technologies<br>Leading the Future</h1>
-                <p class="subtitle">Suprema Technologies integrates cloud security testing with AI-powered online services. Through our in-house dynamic and static analysis engines, enterprises can rapidly detect vulnerabilities while using intelligent tools on the platform to improve overall security and operational efficiency.</p>
-                <button class="cta-button" onclick="scrollToSection('about')">Start Exploring</button>
-            </div>
-        </div>
+<!-- Hero -->
+<section class="hero-section" id="home">
+  <div class="content-wrapper">
+    <div class="text-content">
+      <h1 class="main-title">Suprema Technologies<br>Leading the Future</h1>
+      <p class="subtitle">Suprema Technologies integrates cloud security testing with AI-powered online services. Through our in-house dynamic and static analysis engines, enterprises can rapidly detect vulnerabilities while using intelligent tools on the platform to improve overall security and operational efficiency.</p>
+      <button class="cta-button" onclick="gotoAndHide('about')">Start Exploring</button>
+    </div>
+  </div>
+  <div class="background-visual"></div>
+  <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+  <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+</section>
 
-        <!-- 背景圖片 -->
-        <div class="background-visual"></div>
+<!-- About -->
+<section class="content-section" id="about">
+  <h2 class="section-title">About Us</h2>
+  <p class="section-content">
+    Suprema Technologies focuses on mobile application security testing and protection, embedding cybersecurity into the SSDLC to reduce post-release risks. Our cloud platform integrates Android/iOS static and dynamic analysis engines to deliver real-time vulnerability detection and reports for enterprises and financial institutions.
+  </p>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon">🚀</div><h3>Innovation Driven</h3><p>Cloud automated testing combining static and dynamic analysis to shift security left.</p></div>
+    <div class="feature-card"><div class="feature-icon">⚡</div><h3>High Efficiency</h3><p>One-click upload, batch testing, instant reports—minutes per scan.</p></div>
+    <div class="feature-card"><div class="feature-icon">🎯</div><h3>Precision Services</h3><p>Trusted by finance and SMEs; tailored programs and internal process setup.</p></div>
+  </div>
+</section>
 
-        <!-- 浮動粒子 -->
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </section>
+<!-- Services -->
+<section class="content-section" id="services">
+  <h2 class="section-title">Our Services</h2>
+  <p class="section-content">
+    End-to-end cybersecurity and technical solutions—from website & mobile security testing to cloud architecture and ransomware protection—plus AI online services to accelerate risk discovery and decision-making.
+  </p>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon">💻</div><h3>Website Security Testing</h3><p>Dynamic + static analysis to pass enterprise security reviews.</p></div>
+    <div class="feature-card"><div class="feature-icon">📱</div><h3>Application Security</h3><p>Automated scans and guidance for iOS/Android to cut go-live risk.</p></div>
+    <div class="feature-card"><div class="feature-icon">☁️</div><h3>Cloud Architecture & Intranet</h3><p>Secure, stable environments with ongoing monitoring.</p></div>
+    <div class="feature-card"><div class="feature-icon">🤖</div><h3>AI Online Platform</h3><p>Automated detection, intelligent scoring, real-time reporting.</p></div>
+    <div class="feature-card"><div class="feature-icon">🔒</div><h3>Cybersecurity Protection</h3><p>In-house engines and mobile anti-ransomware with joint defense.</p></div>
+    <div class="feature-card"><div class="feature-icon">📊</div><h3>Data & Visualization</h3><p>Dashboards highlight weaknesses and attack trends for action.</p></div>
+  </div>
+</section>
 
-    <!-- 關於我們區塊 -->
-    <section class="content-section" id="about">
-        <h2 class="section-title">About Us</h2>
-        <p class="section-content">
-            Suprema Technologies focuses on mobile application security testing and protection, embedding cybersecurity into the Software Security Development Life Cycle (SSDLC) to reduce the risk of post-release vulnerabilities. Our core team—composed of senior security experts, software engineers, and product managers—has developed a cloud-based automated app security testing platform that integrates Android/iOS static and dynamic analysis engines to deliver real-time vulnerability detection and reports. We have successfully helped financial institutions such as E.SUN Bank and Yuanta Bank establish internal network security testing environments, delivering high-quality, automated security services. In addition, we offer a mobile ransomware solution that uses behavior-based analysis and joint defense mechanisms to effectively block malicious execution and strengthen enterprise defenses.
+<!-- PRODUCTS OVERLAY -->
+<div id="products-page" class="overlay" aria-hidden="true">
+  <div class="overlay-inner">
+    <div class="panel">
+      <div class="products-header">
+        <h2 class="products-title">Products</h2>
+      </div>
+
+      <!-- Product 1: TP Protocol Fuzzing Suite -->
+      <div class="card">
+        <h3>TP Protocol Fuzzing Suite</h3>
+        <p class="section-subtitle">
+          High-volume fuzz testing for RTP, RTCP, RTSP, and TLS — up to 100,000 cases per run, with reproducible logs.
         </p>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🚀</div>
-                <h3>Innovation Driven</h3>
-                <p>We build a cloud automated security testing platform combining static and dynamic analysis, shifting security left across the development lifecycle to shorten vulnerability exposure time.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>High Efficiency</h3>
-                <p>The platform supports one-click upload, batch testing, and instant reports. A typical scan completes in minutes and can sync results to internal systems to speed remediation.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>Precision Services</h3>
-                <p>Deep experience with finance and SME developers; tailored testing programs. Worked with major clients like E.SUN and Yuanta to establish internal SSDLC testing processes.</p>
-            </div>
+        <div class="tags">
+          <span class="tag">RTP</span><span class="tag">RTCP</span><span class="tag">RTSP</span><span class="tag">TLS</span>
+          <span class="tag">Randomized Cases</span><span class="tag">Log-based Evidence</span>
         </div>
-    </section>
-
-    <!-- 服務區塊 -->
-    <section class="content-section" id="services">
-        <h2 class="section-title">Our Services</h2>
-        <p class="section-content">
-            We provide end-to-end cybersecurity and technical solutions—from website and mobile app security testing to cloud architecture setup and ransomware protection—and continue to develop AI online platform services tailored for startups and enterprises.
-        </p>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">💻</div>
-                <h3>Website Security Testing</h3>
-                <p>Combines dynamic and static analysis with enterprise-grade scanning to ensure your site passes security reviews. We have assisted banks such as Yuanta and E.SUN in building internal network defenses.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📱</div>
-                <h3>Application Security</h3>
-                <p>Automated security scans and optimization advice for native iOS and Android apps to reduce go-live risk and accelerate fix cycles, embedding security from the earliest stages.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">☁️</div>
-                <h3>Cloud Architecture & Intranet</h3>
-                <p>Design and deploy secure, stable cloud environments and enterprise intranets. We have supported multiple banks with internal network security buildouts, plus ongoing maintenance and monitoring.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🤖</div>
-                <h3>AI Online Platform (Planned)</h3>
-                <p>Planned AI platform features automated vulnerability detection, intelligent risk evaluation, and real-time reports—accessible via the web—to boost testing efficiency and decision speed.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔒</div>
-                <h3>Cybersecurity Protection</h3>
-                <p>Self-developed security engines and mobile anti-ransomware solutions with joint defense mechanisms block malicious programs in real time and bring SSDLC practices across development.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Data Analysis & Visualization</h3>
-                <p>Use big-data analytics and dashboards to reveal system weaknesses and attack trends; quantified security reports guide precise defense strategies.</p>
-            </div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="toggleDetails('tp-details')">View details</button>
+          <button class="btn btn-ghost" onclick="showContact()">Contact to Purchase</button>
         </div>
-    </section>
 
-    <script>
-        // 導航欄滾動效果
-        window.addEventListener('scroll', function() {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
+        <!-- Details (collapsible) -->
+        <div id="tp-details" class="details">
+          <h4>Overview</h4>
+          <ul>
+            <li><b>Distribution per Run (100k cases):</b> For bit-bounded fields, the tool samples by field size. Example: a 32-bit timestamp is randomized ~40,000 cases; 16-bit fields ~20,000. Sampling ratios are informed by related research.</li>
+            <li><b>Field/Command Targeting:</b> The engine iterates fields/commands in sequence; direct jumping to test a single field/command is not supported.</li>
+            <li><b>Uniqueness Evidence:</b> A full end-to-end run was executed; see <code>log.txt</code> for 100k unique entries (per protocol notes below).</li>
+          </ul>
 
-        // 平滑滾動功能
-        function scrollToSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            section.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
+          <h4>RTP</h4>
+          <ul>
+            <li><b>Distribution:</b> Bit-size guided sampling as above (e.g., 32-bit timestamp ~40k cases).</li>
+            <li><b>Targeting:</b> Sequential; cannot isolate a specific field only.</li>
+            <li><b>Uniqueness Proof:</b> Provided via <code>log.txt</code> from a complete run.</li>
+            <li><b>Connectivity Loss:</b> RTP is connectionless; loss must be inferred from device logs or Wireshark captures. The program cannot determine loss by itself.</li>
+            <li><b>Packet Recording:</b> Logged packets are complete. Wireshark’s leading link/endpoint headers are auxiliary; reconstruction is possible from <code>log.txt</code> content alone.</li>
+          </ul>
 
-        // 滾動動畫觸發
-<!--        function isElementInViewport(el) {-->
-<!--            const rect = el.getBoundingClientRect();-->
-<!--            return (-->
-<!--                rect.top >= 0 &&-->
-<!--                rect.left >= 0 &&-->
-<!--                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&-->
-<!--                rect.right <= (window.innerWidth || document.documentElement.clientWidth)-->
-<!--            );-->
-<!--        }-->
-                // 滾動動畫觸發
-        function isElementInViewport(el) {
-            const rect = el.getBoundingClientRect();
-            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+          <h4>RTCP</h4>
+          <ul>
+            <li><b>Distribution:</b> Same method as RTP.</li>
+            <li><b>Targeting:</b> Same as RTP (sequential only).</li>
+            <li><b>Uniqueness Proof:</b> Full-run evidence in <code>log.txt</code>.</li>
+            <li><b>Connectivity Loss:</b> Connectionless; diagnose via device logs/Wireshark.</li>
+            <li><b>Packet Recording:</b> Same rationale as RTP.</li>
+          </ul>
 
-            // 當元素的頂部進入視窗下方80%時就觸發
-            return rect.top < windowHeight * 0.8 && rect.bottom > 0;
-        }
+          <h4>RTSP</h4>
+          <ul>
+            <li><b>Distribution:</b> Test counts are allocated by command type; each run shuffles, adds/removes, and mutates commands randomly.</li>
+            <li><b>Targeting:</b> Per-command isolation isn’t supported; commands are tested in order.</li>
+            <li><b>Uniqueness Proof:</b> Full-run evidence in <code>log.txt</code>.</li>
+            <li><b>Connectivity Loss:</b> RTSP is connection-oriented; if the connection drops during transmission, the program stops. Use <code>log.txt</code> to locate the specific triggering packet.</li>
+            <li><b>Packet Recording:</b> Logs focus on command payloads. Link/basic headers seen first in Wireshark are generic; reproduction doesn’t require them.</li>
+          </ul>
 
-        function handleScrollAnimation() {
-            const sections = document.querySelectorAll('.content-section');
-            sections.forEach(section => {
-                if (isElementInViewport(section)) {
-                    section.classList.add('visible');
-                }
-            });
-        }
+          <h4>TLS</h4>
+          <ul>
+            <li><b>Distribution:</b> 50k with fixed header + 50k fully randomized.</li>
+            <li><b>Targeting:</b> No direct jump to a given field/strategy.</li>
+            <li><b>Uniqueness Proof:</b> A full 100k run was not completed due to time; the randomization approach mirrors RTP/RTCP.</li>
+            <li><b>Connectivity Loss:</b> TLS over TCP—any disconnection interrupts transmission.</li>
+            <li><b>Logging/Wireshark Notes:</b>
+              <ul>
+                <li>During fixed-header phase, Wireshark identifies TLS, but payloads are encrypted—use timestamps to correlate issues.</li>
+                <li>During full-fuzz phase (header mutated), Wireshark may label as SSL; without encryption you can inspect packet contents.</li>
+              </ul>
+            </li>
+          </ul>
 
-        window.addEventListener('scroll', handleScrollAnimation);
-        window.addEventListener('load', handleScrollAnimation);
+          <div class="actions" style="margin-top:20px">
+            <button class="btn btn-primary" onclick="showContact()">Contact to Purchase</button>
+            <button class="btn btn-ghost" onclick="toggleDetails('tp-details')">Hide details</button>
+          </div>
+        </div>
+      </div>
+      <!-- /Product 1 -->
+    </div>
+  </div>
+</div>
 
-        // 添加鼠標跟隨效果
-        document.addEventListener('mousemove', function(e) {
-            const particles = document.querySelectorAll('.particle');
-            particles.forEach((particle, index) => {
-                const speed = (index + 1) * 0.01;
-                const x = e.clientX * speed;
-                const y = e.clientY * speed;
+<!-- CONTACT OVERLAY (kept, with navbar visible) -->
+<div id="contact-page" class="overlay" aria-hidden="true">
+  <div class="overlay-inner">
+    <div class="panel contact-container">
+      <h2>Contact Us</h2>
+      <div class="contact-info">
+        📧 Email: <a href="mailto:yourname@example.com">yourname@example.com</a><br>
+        📱 Phone: <a href="tel:+61-412-345-678">+61 412 345 678</a>
+      </div>
+      <button class="back-button" onclick="hideContact()">← Back</button>
+    </div>
+  </div>
+</div>
 
-                setTimeout(() => {
-                    particle.style.transform = `translate(${x}px, ${y}px)`;
-                }, index * 100);
-            });
-        });
+<script>
+// Navbar shadow on scroll
+window.addEventListener('scroll',()=> {
+  const navbar=document.getElementById('navbar');
+  if(window.scrollY>50) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+});
 
-        // 按鈕點擊波紋效果
-        document.querySelector('.cta-button').addEventListener('click', function(e) {
-            const ripple = document.createElement('span');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
+// Smooth scroll + close overlays when navigating sections
+function gotoAndHide(id){
+  hideContact(); hideProducts();
+  const sec=document.getElementById(id);
+  if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
+}
 
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = x + 'px';
-            ripple.style.top = y + 'px';
-            ripple.style.position = 'absolute';
-            ripple.style.borderRadius = '50%';
-            ripple.style.background = 'rgba(255, 255, 255, 0.6)';
-            ripple.style.pointerEvents = 'none';
-            ripple.style.animation = 'ripple 0.6s ease-out';
+// Overlays: show/hide
+function showContact(){ hideProducts(); const p=document.getElementById('contact-page'); p.style.display='block'; p.setAttribute('aria-hidden','false'); window.scrollTo(0,0); }
+function hideContact(){ const p=document.getElementById('contact-page'); p.style.display='none'; p.setAttribute('aria-hidden','true'); }
+function showProducts(){ hideContact(); const p=document.getElementById('products-page'); p.style.display='block'; p.setAttribute('aria-hidden','false'); window.scrollTo(0,0); }
+function hideProducts(){ const p=document.getElementById('products-page'); p.style.display='none'; p.setAttribute('aria-hidden','true'); }
 
-            this.appendChild(ripple);
+// Details toggle
+function toggleDetails(id){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.classList.toggle('open');
+}
 
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        });
+// Section reveal animation
+function isElementInViewport(el){
+  const r=el.getBoundingClientRect();
+  const h=window.innerHeight||document.documentElement.clientHeight;
+  return r.top<h*0.8 && r.bottom>0;
+}
+function handleScrollAnimation(){
+  document.querySelectorAll('.content-section').forEach(sec=>{
+    if(isElementInViewport(sec)) sec.classList.add('visible');
+  });
+}
+window.addEventListener('scroll',handleScrollAnimation);
+window.addEventListener('load',handleScrollAnimation);
 
-        // 添加波紋動畫CSS
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes ripple {
-                0% {
-                    transform: scale(0);
-                    opacity: 1;
-                }
-                100% {
-                    transform: scale(2);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
+// Particles follow
+document.addEventListener('mousemove',e=>{
+  document.querySelectorAll('.particle').forEach((p,i)=>{
+    const speed=(i+1)*0.01;
+    const x=e.clientX*speed,y=e.clientY*speed;
+    setTimeout(()=>{p.style.transform=`translate(${x}px,${y}px)`;},i*100);
+  });
+});
+
+// CTA ripple
+document.querySelector('.cta-button').addEventListener('click',function(e){
+  const ripple=document.createElement('span');
+  const rect=this.getBoundingClientRect();
+  const size=Math.max(rect.width,rect.height);
+  const x=e.clientX-rect.left-size/2, y=e.clientY-rect.top-size/2;
+  ripple.style.cssText=`width:${size}px;height:${size}px;left:${x}px;top:${y}px;position:absolute;border-radius:50%;
+    background:rgba(255,255,255,.6);pointer-events:none;animation:ripple .6s ease-out;`;
+  this.appendChild(ripple); setTimeout(()=>ripple.remove(),600);
+});
+const style=document.createElement('style');
+style.textContent=`@keyframes ripple{0%{transform:scale(0);opacity:1;}100%{transform:scale(2);opacity:0;}}`;
+document.head.appendChild(style);
+</script>
 </body>
-
 </html>
