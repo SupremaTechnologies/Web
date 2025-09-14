@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
 Sitemap: https://suprema-technologies.onrender.com/sitemap.xml
