@@ -1,373 +1,429 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Company - Innovating the Future</title>
-<style>
-/* === Base styles (kept) === */
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Arial',sans-serif;overflow-x:hidden;background:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);}
-
-/* Navbar */
-.navbar{
-  position:fixed;top:0;width:100%;
-  background:rgba(255,255,255,0.95);
-  backdrop-filter:blur(10px);
-  padding:20px 50px;
-  display:flex;justify-content:space-between;align-items:center;
-  z-index:2000;transition:all .3s ease;
-}
-.navbar.scrolled{padding:15px 50px;box-shadow:0 2px 20px rgba(0,0,0,0.1);}
-.logo{font-size:24px;font-weight:bold;color:#1e3a8a;letter-spacing:2px;white-space:nowrap;}
-/* Desktop nav links */
-.nav-links{display:flex;list-style:none;gap:40px;}
-.nav-links li{cursor:pointer;padding:10px 20px;border-radius:25px;transition:all .3s ease;position:relative;overflow:hidden;white-space:nowrap;}
-.nav-links li:hover{background:linear-gradient(45deg,#3b82f6,#1d4ed8);color:#fff;transform:translateY(-2px);}
-.nav-links li::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);transition:left .5s ease;}
-.nav-links li:hover::before{left:100%;}
-
-/* Mobile hamburger button */
-.menu-toggle{
-  display:none; /* shown on mobile */
-  width:44px;height:44px;border:none;background:transparent;cursor:pointer;border-radius:8px;
-}
-.menu-toggle:focus{outline:2px solid #93c5fd;outline-offset:2px;}
-.menu-bars,.menu-bars::before,.menu-bars::after{
-  display:block;width:22px;height:2px;background:#111827;border-radius:2px;position:relative;margin:0 auto;
-}
-.menu-bars::before,.menu-bars::after{content:'';position:absolute;left:0;}
-.menu-bars::before{top:-7px;}
-.menu-bars::after{top:7px;}
-/* X state */
-.menu-toggle.open .menu-bars{background:transparent;}
-.menu-toggle.open .menu-bars::before{transform:rotate(45deg);top:0;}
-.menu-toggle.open .menu-bars::after{transform:rotate(-45deg);top:0;}
-
-/* Hero and content sections (kept) */
-.hero-section{height:100vh;display:flex;align-items:center;padding:0 50px;position:relative;overflow:hidden;}
-.content-wrapper{display:flex;width:100%;max-width:1400px;margin:0 auto;align-items:center;gap:100px;}
-.text-content{flex:1;z-index:2;}
-.main-title{font-size:4rem;font-weight:bold;color:#1e293b;line-height:1.2;margin-bottom:30px;opacity:0;animation:slideInLeft 1s ease forwards;}
-.subtitle{font-size:1.2rem;color:#64748b;line-height:1.6;margin-bottom:40px;opacity:0;animation:slideInLeft 1s ease .3s forwards;}
-.cta-button{background:linear-gradient(45deg,#3b82f6,#1d4ed8);color:#fff;padding:18px 40px;border:none;border-radius:50px;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:all .3s ease;box-shadow:0 10px 30px rgba(59,130,246,.3);opacity:0;animation:slideInLeft 1s ease .6s forwards;position:relative;overflow:hidden;}
-.cta-button:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(59,130,246,.4);}
-.cta-button::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .5s ease;}
-.cta-button:hover::before{left:100%;}
-
-.background-visual{position:absolute;top:0;left:0;width:100%;height:100%;background-image:url("/static/background.png");background-size:cover;background-repeat:no-repeat;background-position:center;opacity:.3;z-index:1;}
-.particle{position:absolute;background:rgba(59,130,246,.6);border-radius:50%;pointer-events:none;animation:float 6s ease-in-out infinite;}
-.particle:nth-child(1){width:4px;height:4px;top:20%;left:15%;animation-delay:0s;}
-.particle:nth-child(2){width:6px;height:6px;top:40%;left:25%;animation-delay:1s;}
-.particle:nth-child(3){width:3px;height:3px;top:60%;left:35%;animation-delay:2s;}
-.particle:nth-child(4){width:5px;height:5px;top:80%;left:20%;animation-delay:3s;}
-.particle:nth-child(5){width:4px;height:4px;top:30%;left:70%;animation-delay:1.5s;}
-.particle:nth-child(6){width:7px;height:7px;top:70%;left:80%;animation-delay:2.5s;}
-
-.content-section{padding:100px 50px;max-width:1200px;margin:0 auto;opacity:0;transform:translateY(50px);transition:all .8s ease;}
-.content-section.visible{opacity:1;transform:translateY(0);}
-.section-title{font-size:2.5rem;color:#1e293b;margin-bottom:30px;text-align:center;}
-.section-content{font-size:1.1rem;line-height:1.8;color:#64748b;text-align:center;margin-bottom:50px;}
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;margin-top:50px;}
-.feature-card{background:rgba(255,255,255,.8);padding:40px 30px;border-radius:20px;text-align:center;transition:all .3s ease;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);}
-.feature-card:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,.1);}
-.feature-icon{width:60px;height:60px;background:linear-gradient(45deg,#3b82f6,#1d4ed8);border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;}
-
-/* Overlays (Products & Contact) keep navbar clickable */
-.overlay{
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:linear-gradient(135deg,#f5f7fa,#c3cfe2);
-  display:none;justify-content:flex-start;align-items:flex-start;
-  z-index:900;padding-top:90px;overflow:auto;
-}
-.overlay-inner{width:100%;display:flex;justify-content:center;align-items:flex-start;padding:40px 20px;}
-.panel{background:#fff;padding:40px 32px;border-radius:20px;max-width:980px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.1);}
-
-/* Products styles */
-.products-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px;}
-.products-title{font-size:2rem;color:#1e293b;}
-.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px;margin-top:12px;}
-.card h3{margin-bottom:8px;color:#111827;}
-.card p{color:#4b5563;line-height:1.6;}
-.tags{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;}
-.tag{font-size:.8rem;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:6px 10px;}
-.actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}
-.btn{border:none;border-radius:999px;padding:12px 18px;cursor:pointer;font-weight:600;}
-.btn-primary{background:linear-gradient(45deg,#3b82f6,#1d4ed8);color:#fff;box-shadow:0 10px 30px rgba(59,130,246,.3);}
-.btn-ghost{background:#e5e7eb;color:#111827;}
-.section-subtitle{font-size:1rem;color:#6b7280;margin-bottom:8px}
-.details{margin-top:16px;display:none;}
-.details.open{display:block;}
-.details h4{margin:16px 0 6px 0;color:#111827;}
-.details ul{padding-left:18px;color:#4b5563;line-height:1.7;}
-.details li{margin:4px 0;}
-
-/* Contact styles */
-.contact-container{text-align:center}
-.contact-info{font-size:1.2rem;color:#1e293b;line-height:2;}
-.contact-info a{color:#1d4ed8;text-decoration:none;}
-.back-button{background:#e5e7eb;color:#111827;border:none;padding:10px 18px;border-radius:999px;cursor:pointer;margin-top:16px;}
-
-/* Animations */
-@keyframes slideInLeft{from{opacity:0;transform:translateX(-50px);}to{opacity:1;transform:translateX(0);}}
-@keyframes float{0%,100%{transform:translateY(0);opacity:.4;}50%{transform:translateY(-20px);opacity:1;}}
-
-/* ======= Mobile (<= 768px) ======= */
-@media (max-width: 768px){
-  .navbar{padding:14px 16px;}
-  .menu-toggle{display:block;}
-  /* Hide desktop links, create mobile dropdown */
-  .nav-links{
-    position:fixed; top:60px; /* below navbar */
-    right:0; left:0;
-    background:rgba(255,255,255,.98);
-    backdrop-filter:blur(8px);
-    display:none;             /* hidden by default */
-    flex-direction:column;
-    gap:0; padding:8px 12px 12px 12px;
-    border-bottom:1px solid #e5e7eb;
-    z-index:1900;
-  }
-  .nav-links.open{display:flex;}
-  .nav-links li{
-    padding:14px 16px;
-    border-radius:12px;
-    margin:4px 4px;
-  }
-  .hero-section{padding:0 16px;}
-  .content-wrapper{flex-direction:column;gap:36px;text-align:center;}
-  .main-title{font-size:2.2rem;}
-  .content-section{padding:60px 16px;}
-  .overlay{padding-top:70px;}
-}
-</style>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Suprema Technologies</title>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <!-- css include -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/animate.css">
+    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
+
 <body>
-<!-- Navbar -->
-<nav class="navbar" id="navbar">
-  <div class="logo">Suprema Technologies</div>
+    <!-- body wrap start -->
+    <div class="body_wrap">
 
-  <!-- Mobile hamburger -->
-  <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">
-    <span class="menu-bars"></span>
-  </button>
+        <!-- Header Start -->
+        <header class="header-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="header-inn d-flex align-items-center justify-content-between">
+                            <div class="site-logo">
+                                <a href="index.html" style="font-size: 30px; font-weight: 800; color: #205B56; text-decoration: none;">
+                                    Suprema Technologies
+                                </a>
+                            </div>
+                            <div class="header-navigation d-flex align-items-center ">
+                                <div class="mainmenu">
+                                    <nav id="menu">
+                                        <ul class="dropdown">
+                                            <li class="active"><a href="index.html">Home</a></li>
+                                            <li><a href="#about">About</a></li>
+                                            <li>
+                                                <a href="javascript:;">Service</a>
+                                                <ul>
+                                                    <li><a href="service.html">All Service</a></li>
+                                                    <li><a href="SOC_index.html">AI-SOC</a></li>
+                                                    <li><a href="smart_contract_index.html">Smart Contract</a></li>
+                                                    <li><a href="Cloud_Backup_and_Recovery_System.html">Cloud Backup</a></li>
+                                                    <li><a href="IOC_index.html">IOC Database</a></li>
+                                                    <li><a href="Packing_index.html">Packing</a></li>
+                                                    <li><a href="Mobile_App_Analysis.html">Mobile App Analysis</a></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;">Sub-Product</a>
+                                                <ul>
+                                                    <li><a href="product.html">All Products</a></li>
+                                                    <li><a href="Antiransomware.html">Anti-Ransomware</a></li>
+                                                    <li><a href="cfgscan.html">Cfg Scan</a></li>
+                                                    <li><a href="webshell.html">Webshell Detection</a></li>
+                                                    <li><a href="fuzzing.html">Fuzzing Test</a></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;">Pages</a>
+                                                <ul>
+                                                    <li><a href="comming-soon.html">Team Member</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="contact.html">Contact</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="menu-toggle" id="toggle">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Header End -->
 
-  <ul class="nav-links" id="navLinks">
-    <li onclick="navigate('home')">Home</li>
-    <li onclick="navigate('about')">About</li>
-    <li onclick="navigate('services')">Services</li>
-    <li onclick="showProducts()">Products</li>
-    <li onclick="showContact()">Contact</li>
-  </ul>
-</nav>
+        <main>
+            <!-- Hero Start -->
+            <section class="hero-area">
+                <div class="hero-top">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="hero-text wow fadeInUp">
+                                    <h1>Leading the Future</h1>
+                                    <p>Suprema Technologies integrates cloud security testing with AI-powered online services. 
+                                        Through our in-house dynamic and static analysis engines, 
+                                        enterprises can rapidly detect vulnerabilities while using intelligent tools on the platform 
+                                        to improve overall security and operational efficiency.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-bottom">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-10 mx-auto">
+                                <div class="hero-img wow fadeInUp" style="position: relative; height: 400px; display: flex; justify-content: center; align-items: center;">
+                                    <style>
+                                        @keyframes float-hero { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+                                        @keyframes spin-hero { 100% { transform: rotate(360deg); } }
+                                    </style>
+                                    
+                                    <!-- Decorative Circles -->
+                                    <div style="position: absolute; width: 350px; height: 350px; border: 2px dashed rgba(32, 91, 86, 0.2); border-radius: 50%; animation: spin-hero 30s linear infinite;"></div>
+                                    <div style="position: absolute; width: 250px; height: 250px; border: 1px solid rgba(32, 91, 86, 0.1); border-radius: 50%;"></div>
 
-<!-- Hero -->
-<section class="hero-section" id="home">
-  <div class="content-wrapper">
-    <div class="text-content">
-      <h1 class="main-title">Suprema Technologies<br>Leading the Future</h1>
-      <p class="subtitle">Suprema Technologies integrates cloud security testing with AI-powered online services. Through our in-house dynamic and static analysis engines, enterprises can rapidly detect vulnerabilities while using intelligent tools on the platform to improve overall security and operational efficiency.</p>
-      <button class="cta-button" onclick="navigate('about')">Start Exploring</button>
+                                    <!-- Main Icon -->
+                                    <i class="fas fa-shield-alt" style="font-size: 100px; color: #205B56; z-index: 2; animation: float-hero 3s ease-in-out infinite; background: #fff; padding: 20px; border-radius: 50%; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"></i>
+
+                                    <!-- Floating Elements -->
+                                    <i class="fas fa-lock" style="position: absolute; font-size: 30px; color: #205B56; top: 20%; left: 25%; opacity: 0.6; animation: float-hero 4s ease-in-out infinite 1s;"></i>
+                                    <i class="fas fa-user-secret" style="position: absolute; font-size: 30px; color: #205B56; bottom: 25%; right: 25%; opacity: 0.6; animation: float-hero 5s ease-in-out infinite 0.5s;"></i>
+                                    <i class="fas fa-fingerprint" style="position: absolute; font-size: 24px; color: #205B56; top: 30%; right: 30%; opacity: 0.4; animation: float-hero 3.5s ease-in-out infinite 2s;"></i>
+                                    <i class="fas fa-network-wired" style="position: absolute; font-size: 24px; color: #205B56; bottom: 30%; left: 30%; opacity: 0.4; animation: float-hero 4.5s ease-in-out infinite 1.5s;"></i>
+                                </div>
+                                <div class="hero-action  wow fadeInUp">
+                                    <a href="product.html" class="cta-btn">Explore Products<span></span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Hero End -->
+
+            <!-- About Start -->
+            <section class="about-area" id="about" style="padding: 100px 0;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-10 mx-auto">
+                            <div class="site-heading text-center wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s">
+                                <h2 class="section-title">ABOUT US</h2>
+                                <p class="section-para" style="max-width: 800px; margin: 0 auto;">
+                                    Suprema Technologies focuses on mobile application security testing and protection, embedding cybersecurity into the SSDLC to reduce post-release risks. Our cloud platform integrates Android/iOS static and dynamic analysis engines to deliver real-time vulnerability detection and reports for enterprises and financial institutions.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="feature-item wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" style="background: #fff; padding: 40px 30px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); text-align: center; height: 100%; transition: transform 0.3s ease;">
+                                <div class="icon" style="font-size: 48px; margin-bottom: 25px;">🚀</div>
+                                <h3 style="font-size: 22px; font-weight: 700; color: #205B56; margin-bottom: 15px;">Innovation Driven</h3>
+                                <p style="color: #666; line-height: 1.6;">Cloud automated testing combining static and dynamic analysis to shift security left.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="feature-item wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="background: #fff; padding: 40px 30px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); text-align: center; height: 100%; transition: transform 0.3s ease;">
+                                <div class="icon" style="font-size: 48px; margin-bottom: 25px;">⚡</div>
+                                <h3 style="font-size: 22px; font-weight: 700; color: #205B56; margin-bottom: 15px;">High Efficiency</h3>
+                                <p style="color: #666; line-height: 1.6;">One-click upload, batch testing, instant reports—minutes per scan.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="feature-item wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.8s" style="background: #fff; padding: 40px 30px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); text-align: center; height: 100%; transition: transform 0.3s ease;">
+                                <div class="icon" style="font-size: 48px; margin-bottom: 25px;">🎯</div>
+                                <h3 style="font-size: 22px; font-weight: 700; color: #205B56; margin-bottom: 15px;">Precision Services</h3>
+                                <p style="color: #666; line-height: 1.6;">Trusted by finance and SMEs; tailored programs and internal process setup.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- About End -->
+
+            <!-- Service Start -->
+            <section class="service-area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-10 mx-auto">
+                            <div class="row align-items-center">
+                                <div class="col-sm-8">
+                                    <div class="site-heading wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s">
+                                        <h2 class="section-title">OUR SERVICES</h2>
+                                        <p class="section-para">Here are the products our lab offers — click to see the details.</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="heading-action text-end d-none d-sm-block">
+                                        <a href="service.html">
+                                            <svg width="46" height="14" viewBox="0 0 46 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M44 7L44.5303 7.53033L45.0607 7L44.5303 6.46967L44 7ZM37.4697 1.53033L43.4697 7.53033L44.5303 6.46967L38.5303 0.469669L37.4697 1.53033ZM43.4697 6.46967L37.4697 12.4697L38.5303 13.5303L44.5303 7.53033L43.4697 6.46967Z" fill="#205B56" />
+                                                <path d="M2.38399e-08 7.75L44 7.75L44 6.25L-2.38399e-08 6.25L2.38399e-08 7.75Z" fill="#205B56" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mx-auto">
+                            <div class="service-box">
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-6">
+                                        <a href="SOC_index.html">
+                                            <div class="single-service-box border-left mt-5 wow fadeInLeft" data-wow-duration="1s" data-wow-delay="0.2s">
+                                                <div class="service-img" style="height: 450px;">
+                                                    <img src="assets/img/SOC-image01.png" alt="img" style="height: 100%; object-fit: cover;">
+                                                </div>
+                                                <div class="service-text d-flex align-items-center">
+                                                    <img src="assets/img/service-1.svg" alt="icon">
+                                                    <h3>AI-SOC</h3>
+                                                </div>
+                                                <span></span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-6">
+                                    <!-- 將 href 替換為您的專案連結 -->
+                                        <a href="smart_contract_index.html">
+                                            <div class="single-service-box border-right mt-5 wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.2s">
+                                                <div class="service-img" style="height: 450px;">
+                                                    <!-- 建議圖片設定 style="height: 100%; object-fit: cover;" 以保持版面整齊 -->
+                                                    <img src="assets/img/smart_contract/smart_contract_icon_white_bg.png" alt="img" style="height: 100%; object-fit: cover;">
+                                                </div>
+                                                <div class="service-text d-flex align-items-center">
+                                                    <!-- 設定您的圖示與標題 -->
+                                                    <img src="assets/img/smart_contract/contract-icon.svg" alt="icon">
+                                                    <h3>Smart Contract</h3>
+                                                </div>
+                                                <span></span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-6">
+                                        <a href="Cloud_Backup_and_Recovery_System.html">
+                                            <div class="single-service-box border-right mt-5 wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.2s">
+                                                <div class="service-img" style="height: 450px;">
+                                                    <img src="assets/img/Cloud_Backup_image01.png" alt="img" style="height: 100%; object-fit: cover;">
+                                                </div>
+                                                <div class="service-text d-flex align-items-center">
+                                                    <img src="assets/img/service-2.svg" alt="icon">
+                                                    <h3>Cloud Backup</h3>
+                                                </div>
+                                                <span></span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-6">
+                                    <!-- 將 href 替換為您的專案連結 -->
+                                        <a href="IOC_index.html">
+                                            <div class="single-service-box border-right mt-5 wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.2s">
+                                                <div class="service-img" style="height: 450px;">
+                                                    <!-- 建議圖片設定 style="height: 100%; object-fit: cover;" 以保持版面整齊 -->
+                                                    <img src="assets/img/IOC/IOC_icon.png" alt="img" style="height: 100%; object-fit: cover;">
+                                                </div>
+                                                <div class="service-text d-flex align-items-center">
+                                                    <!-- 設定您的圖示與標題 -->
+                                                    <img src="assets/img/IOC/IOC_service.svg" alt="icon">
+                                                    <h3>IOC Database</h3>
+                                                </div>
+                                                <span></span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-6">
+                                        <a href="Packing_index.html">
+                                            <div class="single-service-box border-left mt-5 wow fadeInLeft" data-wow-duration="1s" data-wow-delay="0.2s">
+                                                <div class="service-img" style="height: 450px;">
+                                                    <img src="assets/img/packing_small.png" alt="img" style="height: 100%; object-fit: cover;">
+                                                </div>
+                                                <div class="service-text d-flex align-items-center">
+                                                    <img src="assets/img/packing.svg" alt="icon">
+                                                    <h3>Packing</h3>
+                                                </div>
+                                                <span></span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-6">
+                                        <a href="Mobile_App_Analysis.html">
+                                            <div class="single-service-box border-right mt-5 wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.2s">
+                                                <div class="service-img" style="height: 450px;">
+                                                    <img src="assets/img/Mobile_App_Analysis_image01.png" alt="img" style="height: 100%; object-fit: cover;">
+                                                </div>
+                                                <div class="service-text d-flex align-items-center">
+                                                    <img src="assets/img/service-3.svg" alt="icon">
+                                                    <h3>Mobile App Analysis</h3>
+                                                </div>
+                                                <span></span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section_action text-center d-sm-none">
+                        <a href="javascript:;" class="cta-btn">Read More <span></span></a>
+                    </div>
+                </div>
+            </section>
+            <!-- Service End -->
+
+            <!-- Footer Start -->
+            <footer class="footer-area" style="position: relative; overflow: hidden;">
+                <!-- Dynamic Cyber Reactor Container (Background) -->
+                <div id="dynamic-footer-visuals" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;"></div>
+
+                <div class="footer-top" style="position: relative; z-index: 2;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-6">
+                                <div class="footer-widget">
+                                    <div class="footer-contact">
+                                        <div class="footer-logo">
+                                            <a href="index.html" style="font-size: 30px; font-weight: 800; color: #205B56; text-decoration: none;">
+                                                Suprema Technologies
+                                            </a>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <p><a href="tel:+886 929 517 001">+886 929 517 001</a></p>
+                                            </li>
+                                            <li>
+                                                <p><a href="mailto:suprematechnologiesltd@gmail.com">suprematechnologiesltd@gmail.com</a></p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-6">
+                                <div class="footer-widget">
+                                    <div class="footer-link">
+                                        <h3>Menu</h3>
+                                        <ul>
+                                            <li><a href="index.html">Home</a></li>
+                                            <li><a href="service.html">Services</a></li>
+                                            <li><a href="contact.html">Contact Us</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-sm-6">
+                                <div class="footer-widget">
+                                    <!-- Empty widget for spacing if needed, or remove -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom" style="position: relative; z-index: 2;">
+                    <ul class="footer-copyright text-center">
+                        <li>
+                            <p>2025 &copy; All Rights Reserved.</p>
+                        </li>
+                    </ul>
+                </div>
+            </footer>
+            <!-- Footer End -->
+        </main>
     </div>
-  </div>
-  <div class="background-visual"></div>
-  <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-  <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-</section>
+    <!-- body wrap end -->
 
-<!-- About -->
-<section class="content-section" id="about">
-  <h2 class="section-title">About Us</h2>
-  <p class="section-content">
-    Suprema Technologies focuses on mobile application security testing and protection, embedding cybersecurity into the SSDLC to reduce post-release risks. Our cloud platform integrates Android/iOS static and dynamic analysis engines to deliver real-time vulnerability detection and reports for enterprises and financial institutions.
-  </p>
-  <div class="features-grid">
-    <div class="feature-card"><div class="feature-icon">🚀</div><h3>Innovation Driven</h3><p>Cloud automated testing combining static and dynamic analysis to shift security left.</p></div>
-    <div class="feature-card"><div class="feature-icon">⚡</div><h3>High Efficiency</h3><p>One-click upload, batch testing, instant reports—minutes per scan.</p></div>
-    <div class="feature-card"><div class="feature-icon">🎯</div><h3>Precision Services</h3><p>Trusted by finance and SMEs; tailored programs and internal process setup.</p></div>
-  </div>
-</section>
+    <!-- jquery include -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <script src="assets/js/masonry.pkgd.min.js"></script>
+    <script src="assets/js/jquery.counterup.min.js"></script>
+    <script src="assets/js/jquery.waypoints.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        (function(){
+            const container = document.getElementById('dynamic-footer-visuals');
+            if(!container) return;
 
-<!-- Services -->
-<section class="content-section" id="services">
-  <h2 class="section-title">Our Services</h2>
-  <p class="section-content">
-    End-to-end cybersecurity and technical solutions—from website & mobile security testing to cloud architecture and ransomware protection—plus AI online services to accelerate risk discovery and decision-making.
-  </p>
-  <div class="features-grid">
-    <div class="feature-card"><div class="feature-icon">💻</div><h3>Website Security Testing</h3><p>Dynamic + static analysis to pass enterprise security reviews.</p></div>
-    <div class="feature-card"><div class="feature-icon">📱</div><h3>Application Security</h3><p>Automated scans and guidance for iOS/Android to cut go-live risk.</p></div>
-    <div class="feature-card"><div class="feature-icon">☁️</div><h3>Cloud Architecture & Intranet</h3><p>Secure, stable environments with ongoing monitoring.</p></div>
-    <div class="feature-card"><div class="feature-icon">🤖</div><h3>AI Online Platform</h3><p>Automated detection, intelligent scoring, real-time reporting.</p></div>
-    <div class="feature-card"><div class="feature-icon">🔒</div><h3>Cybersecurity Protection</h3><p>In-house engines and mobile anti-ransomware with joint defense.</p></div>
-    <div class="feature-card"><div class="feature-icon">📊</div><h3>Data & Visualization</h3><p>Dashboards highlight weaknesses and attack trends for action.</p></div>
-  </div>
-</section>
+            function createReactor() {
+                const reactor = document.createElement('div');
+                reactor.className = 'dynamic-reactor';
+                
+                // Random position (Full footer range)
+                const left = Math.random() * 100; 
+                const top = Math.random() * 100;
+                reactor.style.left = left + '%';
+                reactor.style.top = top + '%';
+                
+                // Random scale
+                const scale = Math.random() * 0.6 + 0.2; // 0.2 to 0.8
+                reactor.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                
+                // Random opacity
+                reactor.style.opacity = '0'; // Start invisible
+                
+                // Inner HTML (Reusing the reactor styles)
+                reactor.innerHTML = `
+                    <div class="reactor-ring outer"></div>
+                    <div class="reactor-ring middle"></div>
+                    <div class="reactor-ring inner"></div>
+                    <div class="reactor-core"></div>
+                `;
 
-<!-- PRODUCTS OVERLAY -->
-<div id="products-page" class="overlay" aria-hidden="true">
-  <div class="overlay-inner">
-    <div class="panel">
-      <div class="products-header">
-        <h2 class="products-title">Products</h2>
-      </div>
+                container.appendChild(reactor);
 
-      <!-- Product 1: TP Protocol Fuzzing Suite -->
-      <div class="card">
-        <h3>TP Protocol Fuzzing Suite</h3>
-        <p class="section-subtitle">
-          High-volume fuzz testing for RTP, RTCP, RTSP, and TLS — up to 100,000 cases per run, with reproducible logs.
-        </p>
-        <div class="tags">
-          <span class="tag">RTP</span><span class="tag">RTCP</span><span class="tag">RTSP</span><span class="tag">TLS</span>
-          <span class="tag">Randomized Cases</span><span class="tag">Log Evidence</span>
-        </div>
-        <div class="actions">
-          <button class="btn btn-primary" onclick="toggleDetails('tp-details')">View details</button>
-          <button class="btn btn-ghost" onclick="showContact()">Contact to Purchase</button>
-        </div>
+                // Fade in
+                requestAnimationFrame(() => {
+                    reactor.style.opacity = Math.random() * 0.6 + 0.2;
+                });
 
-        <div id="tp-details" class="details">
-          <h4>Overview</h4>
-          <ul>
-            <li><b>Distribution per Run (100k):</b> Bit-bounded sampling by field size. Example: a 32-bit timestamp ~40,000 randomized cases; a 16-bit field ~20,000. Ratios informed by prior research.</li>
-            <li><b>Targeting:</b> Tests iterate fields/commands sequentially; direct single-field/command targeting isn’t supported.</li>
-            <li><b>Uniqueness Evidence:</b> One full run executed; see <code>log.txt</code> for unique entries (per protocol notes below).</li>
-          </ul>
+                // Remove after animation
+                setTimeout(() => {
+                    reactor.style.opacity = '0';
+                    setTimeout(() => {
+                        if(reactor.parentNode) reactor.remove();
+                    }, 1000); // Wait for fade out
+                }, 4000); // Run for 4 seconds
+            }
 
-          <h4>RTP</h4>
-          <ul>
-            <li>Distribution: as above (e.g., 32-bit timestamp ~40k).</li>
-            <li>Targeting: sequential only.</li>
-            <li>Uniqueness: evidence in <code>log.txt</code>.</li>
-            <li>Connectivity Loss: connectionless; diagnose via device logs or Wireshark—program cannot infer loss itself.</li>
-            <li>Packet Recording: logs contain the full packet content required to reproduce frames; Wireshark’s leading link/endpoint headers are auxiliary.</li>
-          </ul>
-
-          <h4>RTCP</h4>
-          <ul>
-            <li>Distribution/Targeting: same as RTP.</li>
-            <li>Uniqueness: full-run evidence in <code>log.txt</code>.</li>
-            <li>Connectivity Loss: connectionless; use device logs / Wireshark.</li>
-            <li>Packet Recording: same rationale as RTP.</li>
-          </ul>
-
-          <h4>RTSP</h4>
-          <ul>
-            <li>Distribution: cases allocated by command; each run shuffles/adds/removes/mutates commands.</li>
-            <li>Targeting: per-command isolation not supported; tested in order.</li>
-            <li>Uniqueness: see <code>log.txt</code>.</li>
-            <li>Connectivity Loss: connection-oriented; if the connection drops, the program stops—use timestamps to locate the triggering packet.</li>
-            <li>Recording: logs focus on command payloads; generic link headers aren’t required for reproduction.</li>
-          </ul>
-
-          <h4>TLS</h4>
-          <ul>
-            <li>Distribution: 50k fixed-header + 50k fully randomized.</li>
-            <li>Targeting: no direct jump to a specific field/strategy.</li>
-            <li>Uniqueness: a full 100k run wasn’t completed due to time; randomization mirrors RTP/RTCP.</li>
-            <li>Connectivity Loss: TLS over TCP—any disconnection interrupts transmission.</li>
-            <li>Logging/Wireshark:
-              <ul>
-                <li>Fixed-header phase: Wireshark identifies TLS; payloads encrypted—correlate with timestamps.</li>
-                <li>Full-fuzz phase: mutated headers may appear as SSL; without encryption, payload bytes remain visible.</li>
-              </ul>
-            </li>
-          </ul>
-
-          <div class="actions" style="margin-top:20px">
-            <button class="btn btn-primary" onclick="showContact()">Contact to Purchase</button>
-            <button class="btn btn-ghost" onclick="toggleDetails('tp-details')">Hide details</button>
-          </div>
-        </div>
-      </div>
-      <!-- /Product 1 -->
-    </div>
-  </div>
-</div>
-
-<!-- CONTACT OVERLAY -->
-<div id="contact-page" class="overlay" aria-hidden="true">
-  <div class="overlay-inner">
-    <div class="panel contact-container">
-      <h2>Contact Us</h2>
-      <div class="contact-info">
-        📧 Email: <a href="mailto:suprematechnologiesltd@gmail.com">suprematechnologiesltd@gmail.com</a><br>
-        📱 Phone: <a href="tel:+886 929 517 001">+886 929 517 001</a>
-      </div>
-      <button class="back-button" onclick="hideContact()">← Back</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// Navbar shadow on scroll
-window.addEventListener('scroll',()=> {
-  const navbar=document.getElementById('navbar');
-  if(window.scrollY>50) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
-});
-
-// Mobile menu toggle
-const menuToggle=document.getElementById('menuToggle');
-const navLinks=document.getElementById('navLinks');
-function closeMenu(){
-  menuToggle.classList.remove('open');
-  menuToggle.setAttribute('aria-expanded','false');
-  navLinks.classList.remove('open');
-}
-menuToggle.addEventListener('click',()=>{
-  const willOpen=!menuToggle.classList.contains('open');
-  menuToggle.classList.toggle('open');
-  menuToggle.setAttribute('aria-expanded',String(willOpen));
-  navLinks.classList.toggle('open');
-});
-// Close menu on resize to desktop
-window.addEventListener('resize',()=>{ if(window.innerWidth>768) closeMenu(); });
-
-// Smooth navigation + close overlays + close mobile menu
-function navigate(id){
-  hideContact(); hideProducts(); closeMenu();
-  const sec=document.getElementById(id);
-  if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-// Overlays
-function showContact(){ hideProducts(); closeMenu(); const p=document.getElementById('contact-page'); p.style.display='block'; p.setAttribute('aria-hidden','false'); window.scrollTo(0,0); }
-function hideContact(){ const p=document.getElementById('contact-page'); p.style.display='none'; p.setAttribute('aria-hidden','true'); }
-function showProducts(){ hideContact(); closeMenu(); const p=document.getElementById('products-page'); p.style.display='block'; p.setAttribute('aria-hidden','false'); window.scrollTo(0,0); }
-function hideProducts(){ const p=document.getElementById('products-page'); p.style.display='none'; p.setAttribute('aria-hidden','true'); }
-
-// Product details toggle
-function toggleDetails(id){ const el=document.getElementById(id); if(el) el.classList.toggle('open'); }
-
-// Reveal on scroll
-function isElementInViewport(el){ const r=el.getBoundingClientRect(); const h=window.innerHeight||document.documentElement.clientHeight; return r.top<h*0.8 && r.bottom>0; }
-function handleScrollAnimation(){ document.querySelectorAll('.content-section').forEach(sec=>{ if(isElementInViewport(sec)) sec.classList.add('visible'); }); }
-window.addEventListener('scroll',handleScrollAnimation);
-window.addEventListener('load',handleScrollAnimation);
-
-// Particles follow
-document.addEventListener('mousemove',e=>{
-  document.querySelectorAll('.particle').forEach((p,i)=>{
-    const speed=(i+1)*0.01; const x=e.clientX*speed, y=e.clientY*speed;
-    setTimeout(()=>{p.style.transform=`translate(${x}px,${y}px)`;},i*100);
-  });
-});
-
-// CTA ripple
-document.querySelector('.cta-button').addEventListener('click',function(e){
-  const ripple=document.createElement('span');
-  const rect=this.getBoundingClientRect(); const size=Math.max(rect.width,rect.height);
-  const x=e.clientX-rect.left-size/2, y=e.clientY-rect.top-size/2;
-  ripple.style.cssText=`width:${size}px;height:${size}px;left:${x}px;top:${y}px;position:absolute;border-radius:50%;
-    background:rgba(255,255,255,.6);pointer-events:none;animation:ripple .6s ease-out;`;
-  this.appendChild(ripple); setTimeout(()=>ripple.remove(),600);
-});
-const style=document.createElement('style');
-style.textContent=`@keyframes ripple{0%{transform:scale(0);opacity:1;}100%{transform:scale(2);opacity:0;}}`;
-document.head.appendChild(style);
-</script>
+            // Initial spawn
+            createReactor();
+            
+            // Continuous spawn
+            setInterval(createReactor, 1200); // Create new one every 1.2s
+        })();
+    </script>
 </body>
+
 </html>
-
-

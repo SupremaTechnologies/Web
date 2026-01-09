@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Application Analysis Platform</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Arial, sans-serif;
+  background:linear-gradient(135deg,#f5f7fa,#c3cfe2);
+  overflow-x:hidden;
+}
+
+html{scroll-behavior:smooth;}
+
+/* ===== Navbar ===== */
+.navbar{
+  position:fixed;
+  top:0;width:100%;
+  z-index:1000;
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(10px);
+  padding:20px 50px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  transition:.3s;
+}
+.navbar.scrolled{
+  padding:14px 50px;
+  box-shadow:0 4px 20px rgba(0,0,0,.1);
+}
+.logo{
+  font-size:24px;
+  font-weight:bold;
+  color:#1e3a8a;
+}
+.nav-links{
+  display:flex;
+  list-style:none;
+  gap:30px;
+}
+.nav-links li{
+  cursor:pointer;
+  padding:8px 18px;
+  border-radius:20px;
+  transition:.3s;
+}
+.nav-links li:hover{
+  background:linear-gradient(45deg,#3b82f6,#1d4ed8);
+  color:#fff;
+}
+
+/* ===== Hero ===== */
+.hero-section{
+  height:100vh;
+  background:#0d1b2d;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  padding:0 50px;
+  position:relative;
+}
+.hero-content{
+  max-width:700px;
+  z-index:2;
+}
+.main-title{
+  font-size:3.8rem;
+  font-weight:bold;
+}
+.subtitle{
+  margin:30px 0;
+  font-size:1.15rem;
+  color:#dbeafe;
+}
+.cta-button{
+  padding:16px 36px;
+  font-size:1.1rem;
+  font-weight:bold;
+  border:none;
+  border-radius:40px;
+  background:linear-gradient(45deg,#3b82f6,#1d4ed8);
+  color:#fff;
+  cursor:pointer;
+}
+.background-visual{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at right,#1e40af,transparent 60%);
+}
+
+/* ===== Sections ===== */
+.content-section{
+  padding:110px 50px;
+  max-width:1200px;
+  margin:auto;
+}
+.section-title{
+  text-align:center;
+  font-size:2.5rem;
+  color:#1e293b;
+}
+.section-content{
+  text-align:center;
+  max-width:800px;
+  margin:20px auto 60px;
+  color:#475569;
+  font-size:1.1rem;
+}
+
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:30px;
+}
+.feature-card{
+  background:#ffffffcc;
+  padding:36px;
+  border-radius:18px;
+  transition:.3s;
+}
+.feature-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 20px 40px rgba(0,0,0,.12);
+}
+.feature-card h3{
+  color:#1e40af;
+  margin-bottom:14px;
+}
+.feature-card p{
+  color:#334155;
+  line-height:1.6;
+}
+
+/* ===== Architecture ===== */
+.architecture-diagram{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  gap:25px;
+}
+.arch-box{
+  background:#ffffffee;
+  padding:28px;
+  width:260px;
+  border-radius:16px;
+  text-align:center;
+}
+.arch-box h3{
+  color:#1e3a8a;
+  margin-bottom:10px;
+}
+.arrow{
+  font-size:36px;
+  color:#2563eb;
+}
+
+/* ===== OWASP ===== */
+.owasp-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:30px;
+}
+.owasp-card{
+  background:#0f172a;
+  color:#e5e7eb;
+  padding:30px;
+  border-radius:18px;
+}
+.owasp-card h3{
+  color:#60a5fa;
+  margin-bottom:12px;
+}
+.owasp-card ul{
+  padding-left:18px;
+}
+.owasp-card li{
+  margin-bottom:8px;
+}
+
+/* ===== Footer ===== */
+footer{
+  background:#020617;
+  color:#94a3b8;
+  padding:40px;
+  text-align:center;
+}
+
+@media(max-width:768px){
+  .main-title{font-size:2.4rem;}
+  .navbar{padding:16px 20px;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav class="navbar" id="navbar">
+  <div class="logo">App Team</div>
+  <ul class="nav-links">
+    <li onclick="window.location.href='index.html'">Home</li>
+    <li onclick="navigate('features')">Capabilities</li>
+    <li onclick="navigate('static')">Static</li>
+    <li onclick="navigate('dynamic')">Dynamic</li>
+    <li onclick="navigate('owasp')">OWASP</li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero-section" id="home">
+  <div class="hero-content">
+    <h1 class="main-title">Mobile Application Analysis Platform</h1>
+    <p class="subtitle">
+      Advanced static and dynamic analysis for <strong>iOS</strong> and
+      <strong>Android</strong> applications. We inspect <strong>IPA</strong>
+      and <strong>APK</strong> files using reverse engineering and
+      runtime instrumentation such as <strong>Frida</strong>.
+    </p>
+    <button class="cta-button" onclick="navigate('features')">
+      View Capabilities
+    </button>
+    <button class="cta-button" style="background:linear-gradient(45deg,#10b981,#047857); margin-top:16px;" onclick="window.open('http://20.189.120.87:5173/','_blank')"> Try Our Service </button>
+  </div>
+  <div class="background-visual"></div>
+</section>
+
+<!-- FEATURES -->
+<section class="content-section" id="features">
+  <h2 class="section-title">Core Capabilities</h2>
+  <p class="section-content">
+    Deep inspection of mobile applications across code, runtime behavior,
+    and security posture.
+  </p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <h3>Static Analysis</h3>
+      <p>
+        Reverse engineer IPA and APK files to analyze permissions,
+        embedded secrets, SDK usage, cryptography, and insecure logic.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <h3>Dynamic Analysis</h3>
+      <p>
+        Execute applications in controlled environments and instrument
+        runtime behavior using Frida to observe APIs, data flows,
+        and hidden functionality.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <h3>Threat Detection</h3>
+      <p>
+        Detect malicious behavior, anti-debug techniques,
+        dynamic code loading, and privacy violations.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- STATIC -->
+<section class="content-section" id="static">
+  <h2 class="section-title">Static Analysis Workflow</h2>
+  <p class="section-content">
+    Application packages are analyzed without execution to identify
+    structural and configuration risks.
+  </p>
+
+  <div class="architecture-diagram">
+    <div class="arch-box">
+      <h3>Package Extraction</h3>
+      IPA / APK unpacking<br>Binary & resource extraction
+    </div>
+    <div class="arrow">→</div>
+    <div class="arch-box">
+      <h3>Code Inspection</h3>
+      Permissions<br>Secrets<br>SDKs
+    </div>
+    <div class="arrow">→</div>
+    <div class="arch-box">
+      <h3>Risk Assessment</h3>
+      Vulnerability identification<br>Security findings
+    </div>
+  </div>
+</section>
+
+<!-- DYNAMIC -->
+<section class="content-section" id="dynamic">
+  <h2 class="section-title">Dynamic Analysis Workflow</h2>
+  <p class="section-content">
+    Runtime analysis reveals behaviors that cannot be observed statically.
+  </p>
+
+  <div class="architecture-diagram">
+    <div class="arch-box">
+      <h3>Controlled Execution</h3>
+      Emulator / Device<br>Isolated environment
+    </div>
+    <div class="arrow">→</div>
+    <div class="arch-box">
+      <h3>Frida Instrumentation</h3>
+      API hooking<br>Native & Java hooks
+    </div>
+    <div class="arrow">→</div>
+    <div class="arch-box">
+      <h3>Runtime Findings</h3>
+      Data leakage<br>Hidden logic
+    </div>
+  </div>
+</section>
+
+<!-- OWASP -->
+<section class="content-section" id="owasp">
+  <h2 class="section-title">OWASP MASVS & MSTG Coverage</h2>
+  <p class="section-content">
+    Our analysis aligns with industry-standard mobile security frameworks.
+  </p>
+
+  <div class="owasp-grid">
+    <div class="owasp-card">
+      <h3>MASVS – Architecture & Data</h3>
+      <ul>
+        <li>Secure data storage</li>
+        <li>Encryption & key handling</li>
+        <li>Secure communication</li>
+      </ul>
+    </div>
+
+    <div class="owasp-card">
+      <h3>MASVS – Platform Interaction</h3>
+      <ul>
+        <li>Permission misuse</li>
+        <li>Inter-process communication</li>
+        <li>Insecure intents & URL schemes</li>
+      </ul>
+    </div>
+
+    <div class="owasp-card">
+      <h3>MSTG – Runtime Analysis</h3>
+      <ul>
+        <li>Anti-debug & anti-tampering</li>
+        <li>Dynamic code loading</li>
+        <li>Runtime API abuse</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+function navigate(id){
+  const el=document.getElementById(id);
+  if(!el){
+    console.warn("No section:",id);
+    return;
+  }
+  const y=el.getBoundingClientRect().top+window.pageYOffset-90;
+  window.scrollTo({top:y,behavior:'smooth'});
+}
+
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar')
+    .classList.toggle('scrolled',window.scrollY>50);
+});
+</script>
+
+</body>
+</html>

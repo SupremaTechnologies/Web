@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SV-Detector</title>
+<style>
+/* === Base styles (kept) === */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Arial',sans-serif;overflow-x:hidden;background:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);}
+
+/* Navbar */
+.navbar{
+  position:fixed;top:0;width:100%;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(10px);
+  padding:20px 50px;
+  display:flex;justify-content:space-between;align-items:center;
+  z-index:2000;transition:all .3s ease;
+}
+.navbar.scrolled{padding:15px 50px;box-shadow:0 2px 20px rgba(0,0,0,0.1);}
+.logo{font-size:24px;font-weight:bold;color:#1e3a8a;letter-spacing:2px;white-space:nowrap;}
+/* Desktop nav links */
+.nav-links{display:flex;list-style:none;gap:40px;}
+.nav-links li{cursor:pointer;padding:10px 20px;border-radius:25px;transition:all .3s ease;position:relative;overflow:hidden;white-space:nowrap;}
+.nav-links li:hover{background:linear-gradient(45deg,#3b82f6,#1d4ed8);color:#fff;transform:translateY(-2px);}
+.nav-links li::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);transition:left .5s ease;}
+.nav-links li:hover::before{left:100%;}
+
+/* Mobile hamburger button */
+.menu-toggle{
+  display:none; /* shown on mobile */
+  width:44px;height:44px;border:none;background:transparent;cursor:pointer;border-radius:8px;
+}
+.menu-toggle:focus{outline:2px solid #93c5fd;outline-offset:2px;}
+.menu-bars,.menu-bars::before,.menu-bars::after{
+  display:block;width:22px;height:2px;background:#111827;border-radius:2px;position:relative;margin:0 auto;
+}
+.menu-bars::before,.menu-bars::after{content:'';position:absolute;left:0;}
+.menu-bars::before{top:-7px;}
+.menu-bars::after{top:7px;}
+/* X state */
+.menu-toggle.open .menu-bars{background:transparent;}
+.menu-toggle.open .menu-bars::before{transform:rotate(45deg);top:0;}
+.menu-toggle.open .menu-bars::after{transform:rotate(-45deg);top:0;}
+
+/* Hero and content sections (kept) */
+.hero-section{height:100vh;display:flex;align-items:center;padding:0 50px;position:relative;overflow:hidden;}
+.content-wrapper{display:flex;width:100%;max-width:1400px;margin:0 auto;align-items:center;gap:100px;}
+.text-content{flex:1;z-index:2;}
+.main-title{font-size:4rem;font-weight:bold;color:#1e293b;line-height:1.2;margin-bottom:30px;opacity:0;animation:slideInLeft 1s ease forwards;}
+.subtitle{font-size:1.2rem;color:#64748b;line-height:1.6;margin-bottom:40px;opacity:0;animation:slideInLeft 1s ease .3s forwards;}
+.cta-button{background:linear-gradient(45deg,#3b82f6,#1d4ed8);color:#fff;padding:18px 40px;border:none;border-radius:50px;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:all .3s ease;box-shadow:0 10px 30px rgba(59,130,246,.3);opacity:0;animation:slideInLeft 1s ease .6s forwards;position:relative;overflow:hidden;}
+.cta-button:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(59,130,246,.4);}
+.cta-button::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .5s ease;}
+.cta-button:hover::before{left:100%;}
+
+.background-visual{position:absolute;top:0;left:0;width:100%;height:100%;background-image:url("/assets/img/smart_contract/background.png");background-size:cover;background-repeat:no-repeat;background-position:center;opacity:.3;z-index:1;}
+.particle{position:absolute;background:rgba(59,130,246,.6);border-radius:50%;pointer-events:none;animation:float 6s ease-in-out infinite;}
+.particle:nth-child(1){width:4px;height:4px;top:20%;left:15%;animation-delay:0s;}
+.particle:nth-child(2){width:6px;height:6px;top:40%;left:25%;animation-delay:1s;}
+.particle:nth-child(3){width:3px;height:3px;top:60%;left:35%;animation-delay:2s;}
+.particle:nth-child(4){width:5px;height:5px;top:80%;left:20%;animation-delay:3s;}
+.particle:nth-child(5){width:4px;height:4px;top:30%;left:70%;animation-delay:1.5s;}
+.particle:nth-child(6){width:7px;height:7px;top:70%;left:80%;animation-delay:2.5s;}
+
+.content-section{padding:100px 50px;max-width:1200px;margin:0 auto;opacity:0;transform:translateY(50px);transition:all .8s ease;}
+.content-section.visible{opacity:1;transform:translateY(0);}
+.section-title{font-size:2.5rem;color:#1e293b;margin-bottom:30px;text-align:center;}
+.section-content{font-size:1.1rem;line-height:1.8;color:#64748b;text-align:center;margin-bottom:50px;}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;margin-top:50px;}
+.feature-card{background:rgba(255,255,255,.8);padding:40px 30px;border-radius:20px;text-align:center;transition:all .3s ease;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);}
+.feature-card:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,.1);}
+.feature-describe{color:#00398a;line-height:1.6;margin-top:15px;}
+.feature-icon{width:60px;height:60px;background:linear-gradient(45deg,#3b82f6,#1d4ed8);border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;}
+
+/* Overlays (Products & Contact) keep navbar clickable */
+.overlay{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:linear-gradient(135deg,#f5f7fa,#c3cfe2);
+  display:none;justify-content:flex-start;align-items:flex-start;
+  z-index:900;padding-top:90px;overflow:auto;
+}
+.overlay-inner{width:100%;display:flex;justify-content:center;align-items:flex-start;padding:40px 20px;}
+.panel{background:#fff;padding:40px 32px;border-radius:20px;max-width:980px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.1);}
+
+/* Products styles */
+.products-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px;}
+.products-title{font-size:2rem;color:#1e293b;}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px;margin-top:12px;}
+.card h3{margin-bottom:8px;color:#111827;}
+.card p{color:#4b5563;line-height:1.6;}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;}
+.tag{font-size:.8rem;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:6px 10px;}
+.actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}
+.btn{border:none;border-radius:999px;padding:12px 18px;cursor:pointer;font-weight:600;}
+.btn-primary{background:linear-gradient(45deg,#3b82f6,#1d4ed8);color:#fff;box-shadow:0 10px 30px rgba(59,130,246,.3);}
+.btn-ghost{background:#e5e7eb;color:#111827;}
+.section-subtitle{font-size:1rem;color:#6b7280;margin-bottom:8px}
+.details{margin-top:16px;display:none;}
+.details.open{display:block;}
+.details h4{margin:16px 0 6px 0;color:#111827;}
+.details ul{padding-left:18px;color:#4b5563;line-height:1.7;}
+.details li{margin:4px 0;}
+
+/* Contact styles */
+.contact-container{text-align:center}
+.contact-info{font-size:1.2rem;color:#1e293b;line-height:2;}
+.contact-info a{color:#1d4ed8;text-decoration:none;}
+.back-button{background:#e5e7eb;color:#111827;border:none;padding:10px 18px;border-radius:999px;cursor:pointer;margin-top:16px;}
+
+/* Animations */
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-50px);}to{opacity:1;transform:translateX(0);}}
+@keyframes float{0%,100%{transform:translateY(0);opacity:.4;}50%{transform:translateY(-20px);opacity:1;}}
+
+/* Architecture Diagram Styles */
+.architecture-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px; /* Increased gap */
+  margin-top: 50px;
+  font-family: 'Arial', sans-serif;
+  transform: scale(1.1); /* Slight overall scale */
+  transform-origin: top center;
+  margin-bottom: 60px; /* Compensate for scale */
+}
+
+.arch-col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 40px; /* Increased gap */
+  width: 320px; /* Increased width */
+}
+
+.arch-col-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  max-width: 700px; /* Increased width */
+  width: 100%;
+}
+
+.arch-box {
+  background: #e8f5e9; /* Light green */
+  border: 2px solid #81c784; /* Green border */
+  border-radius: 16px;
+  padding: 25px; /* Increased padding */
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.arch-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.arch-box h3 {
+  font-size: 1.5rem; /* Larger font */
+  color: #2e7d32;
+  margin-bottom: 15px;
+}
+
+.arch-box h4 {
+  font-size: 1.3rem; /* Larger font */
+  color: #2e7d32;
+  margin-bottom: 12px;
+}
+
+.sub-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.sub-btn {
+  background: #d1c4e9; /* Light purple */
+  border: 1px solid #9575cd;
+  padding: 12px; /* Larger padding */
+  border-radius: 8px;
+  color: #4527a0;
+  font-weight: bold;
+  font-size: 1.1rem; /* Larger font */
+  transition: background 0.2s;
+}
+.sub-btn:hover { background: #b39ddb; }
+
+/* Arrows */
+.arch-arrows-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 140px; /* Increased gap to match left boxes */
+  align-items: center;
+  color: #555;
+  font-weight: bold;
+  font-size: 1.1rem;
+  position: relative;
+}
+
+.arrow-right {
+  width: 70px; /* Longer arrow */
+  height: 24px; /* Thicker arrow */
+  background: #ffcc80; /* Orange arrow */
+  position: relative;
+}
+.arrow-right::after {
+  content: '';
+  position: absolute;
+  right: -18px;
+  top: -12px;
+  border-left: 18px solid #ffcc80;
+  border-top: 24px solid transparent;
+  border-bottom: 24px solid transparent;
+}
+
+.arrow-label {
+  position: absolute;
+  text-align: center;
+  width: 140px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.8);
+  padding: 8px;
+  border-radius: 5px;
+}
+
+/* AI SOC Box */
+.ai-soc-container {
+  background: #e8f5e9;
+  width: 100%;
+}
+
+.ai-soc-content {
+  display: flex;
+  gap: 25px;
+  margin-top: 25px;
+}
+
+.orange-box {
+  flex: 1;
+  background: #ffe0b2; /* Light orange */
+  border: 2px solid #ffb74d;
+  border-radius: 12px;
+  padding: 20px; /* Increased padding */
+  text-align: left;
+  transition: transform 0.2s;
+}
+.orange-box:hover { transform: scale(1.03); cursor: pointer; }
+.orange-box h4 { color: #e65100; font-size: 1.2rem; text-align: center; margin-bottom: 10px; }
+.orange-box ul { padding-left: 25px; color: #bf360c; font-size: 1.05rem; line-height: 1.7; }
+
+/* Vertical Arrow */
+.arrow-vertical-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #2e7d32;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.arrow-double-vertical {
+  width: 24px;
+  height: 50px;
+  background: #66bb6a;
+  position: relative;
+}
+.arrow-double-vertical::before {
+  content: ''; position: absolute; top: -12px; left: -12px;
+  border-bottom: 12px solid #66bb6a; border-left: 24px solid transparent; border-right: 24px solid transparent;
+}
+.arrow-double-vertical::after {
+  content: ''; position: absolute; bottom: -12px; left: -12px;
+  border-top: 12px solid #66bb6a; border-left: 24px solid transparent; border-right: 24px solid transparent;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .architecture-diagram { flex-direction: column; }
+  .arch-arrows-center { transform: rotate(90deg); gap: 20px; margin: 20px 0; }
+  .arrow-label { transform: rotate(-90deg); }
+  .ai-soc-content { flex-direction: column; }
+}
+
+/* ======= Mobile (<= 768px) ======= */
+@media (max-width: 768px){
+  .navbar{padding:14px 16px;}
+  .menu-toggle{display:block;}
+  /* Hide desktop links, create mobile dropdown */
+  .nav-links{
+    position:fixed; top:60px; /* below navbar */
+    right:0; left:0;
+    background:rgba(255,255,255,.98);
+    backdrop-filter:blur(8px);
+    display:none;             /* hidden by default */
+    flex-direction:column;
+    gap:0; padding:8px 12px 12px 12px;
+    border-bottom:1px solid #e5e7eb;
+    z-index:1900;
+  }
+  .nav-links.open{display:flex;}
+  .nav-links li{
+    padding:14px 16px;
+    border-radius:12px;
+    margin:4px 4px;
+  }
+  .hero-section{padding:0 16px;}
+  .content-wrapper{flex-direction:column;gap:36px;text-align:center;}
+  .main-title{font-size:2.2rem;}
+  .content-section{padding:60px 16px;}
+  .overlay{padding-top:70px;}
+}
+/* Step 2 inner blocks */
+.step2-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.inner-block {
+  width: 100%;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+}
+
+.inner-block h4 {
+  margin-bottom: 6px;
+  color: #1e293b;
+  font-size: 1.1rem;
+}
+
+.inner-block p {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.inner-arrow {
+  font-size: 20px;
+  color: #64748b;
+}
+
+</style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="logo">Solfuzz</div>
+
+  <!-- Mobile hamburger -->
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">
+    <span class="menu-bars"></span>
+  </button>
+
+  <ul class="nav-links" id="navLinks">
+    <li onclick="window.location.href='index.html'">Home</li>
+    <li onclick="navigate('home')">Smart Contract</li>
+    <li onclick="navigate('tools')">tools</li>
+    <li onclick="navigate('CFG')">CFG</li>
+    <li onclick="navigate('MLCD')">MLCD</li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero-section" id="home">
+  <div class="content-wrapper">
+    <div class="text-content">
+      <h1 class="main-title">Vulnerability Detection System<br>for Smart Contract in Blockchain</h1>
+      <p class="subtitle">
+        We develop testing tools to analyze contract content through different approaches.<br>
+        Scan contracts, identify vulnerabilities, and provide potential solutions.
+      </p>
+    </div>
+  </div>
+  <div class="background-visual"></div>
+  <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+  <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+</section>
+
+<!-- tools -->
+<section class="content-section" id="tools">
+  <h2 class="section-title">Tools</h2>
+  <p class="section-content">
+    We developed two solutions that enhance our ability to detect and assess contract risks.:
+  </p>
+  <div class="features-grid">
+    <button class="feature-card" onclick="navigate('CFG')"><div class="feature-icon">⚙️</div><h3>Control flow graph</h3><p class="feature-describe">Using control flow graph to analyze the contract.</p></button>
+    <button class="feature-card" onclick="navigate('MLCD')"><div class="feature-icon">🔍</div><h3>Multi-Label Vulnerability Detection</h3><p class="feature-describe">Combining different machine learning models to classify the vulnerabilities.</p></button>
+  </div>
+</section>
+
+<!-- CFG -->
+<section class="content-section" id="CFG">
+  <h2 class="section-title">Control flow graph</h2>
+  <p class="section-content">
+    It is a smart contract analysis system that integrates static and dynamic techniques.<br>
+    It builds a control flow graph from Solidity-compiled opcodes to guide fuzzing.<br>
+    With attack contract generation and mutation driven by static analysis results and CFG coverage.<br>
+  </p>
+  
+  <div class="architecture-diagram">
+
+    <!-- Step 1 -->
+    <div class="arch-box">
+        <h3>Step 1<br>Compile test contract</h3>
+        <p>
+       • Compile contract<br>
+       • Obtain the opcode and ABI<br>
+        </p>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow-right"></div>
+
+    <!-- Step 2 -->
+        <div class="arch-box">
+        <h3>Step 2<br>Static analysis on CFG</h3>
+        <p>
+       • Convert bytecode to opcodes<br>
+       • Establish control flow graph<br>
+       • Conduct static analysis<br>
+        </p>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow-right"></div>
+
+    <!-- Step 3 -->
+    <div class="arch-box">
+        <h3>Step 3<br>Dynamic analysis</h3>
+        <p>
+        • Generate seeds based on static analysis<br>
+        • Using fuzzing test<br>
+        </p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- MLCD -->
+<section class="content-section" id="MLCD">
+  <h2 class="section-title">Multi-Label Vulnerability Detection</h2>
+  <p class="section-content">
+    We use a cluster of machine learning models to identify different types of vulnerabilities in smart contracts.<br>
+    In addition, we incorporate the results from traditional static analysis tools to improve the accuracy and stability of the final output.<br>
+    Finally, we leverage OpenAI to automatically generate reports .
+  </p>
+  
+  <div class="architecture-diagram">
+
+    <!-- Step 1 -->
+    <div class="arch-box">
+        <h3>Step 1<br>Contract Preprocessing</h3>
+        <p>
+        • Smart Contract Source Code<br>
+        </p>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow-right"></div>
+
+    <!-- Step 2 (Split Block) -->
+    <div class="arch-box">
+        <h3>Step 2<br>Vulnerability Detection</h3>
+
+        <div class="step2-inner">
+
+        <!-- Upper block -->
+        <div class="inner-block">
+            <h4>Slither Analysis</h4>
+            <p>
+            • Traditional Static Analysis Tool<br>
+            • For a stable output.<br>
+            </p>
+        </div>
+
+        <!-- Lower block -->
+        <div class="inner-block">
+            <h4>Machine Learning Models</h4>
+            <p>
+           • Bert/LSTM<br>
+           • label the potential vulnerabilities.<br>
+            </p>
+        </div>
+
+        </div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow-right"></div>
+
+    <!-- Step 3 -->
+    <div class="arch-box">
+        <h3>Step 3<br>Result Aggregation & Report</h3>
+        <p>
+        • Show the vulnerabilities function<br>
+        • Describe how the problem occur<br>
+        • Provide the posible solution<br>
+        </p>
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<script>
+// Navbar shadow on scroll
+window.addEventListener('scroll',()=> {
+  const navbar=document.getElementById('navbar');
+  if(window.scrollY>50) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+});
+
+// Mobile menu toggle
+const menuToggle=document.getElementById('menuToggle');
+const navLinks=document.getElementById('navLinks');
+function closeMenu(){
+  menuToggle.classList.remove('open');
+  menuToggle.setAttribute('aria-expanded','false');
+  navLinks.classList.remove('open');
+}
+menuToggle.addEventListener('click',()=>{
+  const willOpen=!menuToggle.classList.contains('open');
+  menuToggle.classList.toggle('open');
+  menuToggle.setAttribute('aria-expanded',String(willOpen));
+  navLinks.classList.toggle('open');
+});
+// Close menu on resize to desktop
+window.addEventListener('resize',()=>{ if(window.innerWidth>768) closeMenu(); });
+
+// Smooth navigation + close mobile menu
+function navigate(id){
+  closeMenu();
+  const sec=document.getElementById(id);
+  if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// Reveal on scroll
+function isElementInViewport(el){ const r=el.getBoundingClientRect(); const h=window.innerHeight||document.documentElement.clientHeight; return r.top<h*0.8 && r.bottom>0; }
+function handleScrollAnimation(){ document.querySelectorAll('.content-section').forEach(sec=>{ if(isElementInViewport(sec)) sec.classList.add('visible'); }); }
+window.addEventListener('scroll',handleScrollAnimation);
+window.addEventListener('load',handleScrollAnimation);
+
+// Particles follow
+document.addEventListener('mousemove',e=>{
+  document.querySelectorAll('.particle').forEach((p,i)=>{
+    const speed=(i+1)*0.01; const x=e.clientX*speed, y=e.clientY*speed;
+    setTimeout(()=>{p.style.transform=`translate(${x}px,${y}px)`;},i*100);
+  });
+});
+
+// CTA ripple
+document.querySelector('.cta-button').addEventListener('click',function(e){
+  const ripple=document.createElement('span');
+  const rect=this.getBoundingClientRect(); const size=Math.max(rect.width,rect.height);
+  const x=e.clientX-rect.left-size/2, y=e.clientY-rect.top-size/2;
+  ripple.style.cssText=`width:${size}px;height:${size}px;left:${x}px;top:${y}px;position:absolute;border-radius:50%;
+    background:rgba(255,255,255,.6);pointer-events:none;animation:ripple .6s ease-out;`;
+  this.appendChild(ripple); setTimeout(()=>ripple.remove(),600);
+});
+const style=document.createElement('style');
+style.textContent=`@keyframes ripple{0%{transform:scale(0);opacity:1;}100%{transform:scale(2);opacity:0;}}`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
+
+
