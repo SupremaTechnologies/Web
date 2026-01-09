@@ -1,0 +1,16 @@
+<svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景圓形 (與 service-1.svg 一致) -->
+  <path d="M56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 43.464 12.536 56 28 56C43.464 56 56 43.464 56 28Z" fill="#205B56" fill-opacity="0.24"/>
+  
+  <!-- 合約圖示 (顏色與 service-1.svg 的線條顏色 #205B56 一致) -->
+  <g transform="translate(18, 15)" stroke="#205B56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 紙張輪廓 -->
+    <path d="M4 0 H16 L20 4 V26 H0 V4 L4 0 Z" fill="none" />
+    <!-- 摺角 -->
+    <path d="M16 0 V4 H20" fill="none" />
+    <!-- 內容線條 -->
+    <line x1="5" y1="10" x2="15" y2="10" />
+    <line x1="5" y1="16" x2="15" y2="16" />
+    <line x1="5" y1="22" x2="10" y2="22" />
+  </g>
+</svg>
